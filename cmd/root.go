@@ -1,4 +1,6 @@
-// Copyright © 2018 rangertaha rangertaha@gmail.com
+// The MIT License (MIT)
+//
+// Copyright © 2019 Rangertaha <rangertaha@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +23,25 @@
 package cmd
 
 import (
-	"os"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
-	//"github.com/rangertaha/exfil"
+
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/viper"
 )
 
+var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "exfil [command]",
-	Short: "Exfiltrate data from a system",
-	Long: `Data exfiltration framework designed to triage and exfiltrate files by user selected priority`,
+	Use:   "exfil [options] [target]",
+	Short: "Exfiltrate data from a computer system",
+	Long:  `Data exfiltration framework designed to exfiltrate data from a computer system.`,
 }
 
+// Execute ...
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -44,25 +50,41 @@ func Execute() {
 }
 
 func init() {
+	cobra.OnInitialize(initConfig)
 
-	//// Basic options
-	//rootCmd.PersistentFlags().StringArrayP("keyboards", "k", []string{"en1"},
-	//	"Keyboards/layouts ID to use")
-	////rootCmd.PersistentFlags().StringArrayP("languages", "l", []string{"all"},
-	////	"Language ID to use for linguistic typos")
-	//
-	//// Processing
-	//rootCmd.PersistentFlags().IntP("concurrency", "c", 50,
-	//	"Number of concurrent workers")
-	//rootCmd.PersistentFlags().StringArrayP("typos", "t", []string{"all"},
-	//	"Types of typos to perform")
-	//
-	//// Post Processing options for retrieving additional data
-	//rootCmd.PersistentFlags().StringArrayP("funcs", "x", []string{"idna"},
-	//	"Extra functions for data or filtering")
-	//
-	//// Output options
-	//rootCmd.PersistentFlags().StringP("file", "f", "", "Output filename")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.exfil.yaml)")
+
+	// Plugins
+	rootCmd.PersistentFlags().StringArrayP("routes", "r", []string{"dns", "email", "icmp", "tcp", "udp", "gdive"},
+		"Routes are plugins that are responsible for sending and recieving data.")
+
+	// Verbosity Options
+	rootCmd.PersistentFlags().BoolP("progress", "p", false, "Show progrss bar with estimated time of completion")
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Output additional details")
 }
 
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory.
+		home, err := homedir.Dir()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		// Search config in home directory with name ".exfil" (without extension).
+		viper.AddConfigPath(home)
+		viper.SetConfigName(".exfil")
+	}
+
+	viper.AutomaticEnv() // read in environment variables that match
+
+	// If a config file is found, read it in.
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
+}
