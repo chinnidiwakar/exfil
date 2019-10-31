@@ -9,7 +9,7 @@ VERSION=$(shell grep -e 'VERSION = ".*"' pkg/version.go | cut -d= -f2 | sed  s/[
 BUILD_DIR=build
 NAME=exfil
 
-.PHONY: help, test, clean, deps, versions
+.PHONY: build, test, clean, run, deps
 
 all: build
 
