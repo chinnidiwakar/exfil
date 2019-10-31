@@ -19,12 +19,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-package main
 
-import (
-	"github.com/rangertaha/exfil/cmd"
-)
+package plugins
 
-func main() {
-	cmd.Execute()
+// GDrive ...
+type GDrive struct{}
+
+// Config ...
+func (g *GDrive) Config(p string) (s string) {
+	return s
+}
+
+// Write ...
+func (g *GDrive) Write(p []byte) (n int, err error) {
+	return n, err
+}
+
+// Read ...
+func (g *GDrive) Read(p []byte) (n int, err error) {
+	return n, err
 }

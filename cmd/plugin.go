@@ -19,17 +19,28 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-package exfil
 
-const (
-	// VERSION format is loosely based on [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-	VERSION = "0.0.1"
+package cmd
 
-	// DEBUG not used yet
-	DEBUG = false
+import (
+	"fmt"
 
-	// LOGO made as ascii graphics
-	LOGO = `
-
- Version: ` + VERSION + "\n"
+	"github.com/spf13/cobra"
 )
+
+// pluginCmd represents the plugin command
+var pluginCmd = &cobra.Command{
+	Use:   "plugin",
+	Short: "Command to search, download and update plugins",
+	Long:  `Plugin management command used to search, download, and update plugins`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("plugin called")
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(pluginCmd)
+	pluginCmd.Flags().StringP("update", "u", "latest", "Update plugin with a given version")
+	pluginCmd.Flags().StringP("list", "l", "*", "List available plugins matching regex")
+	pluginCmd.Flags().StringP("get", "g", "", "Download and install the given plugin")
+}

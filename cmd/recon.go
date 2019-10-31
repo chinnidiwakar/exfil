@@ -19,12 +19,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-package main
+
+package cmd
 
 import (
-	"github.com/rangertaha/exfil/cmd"
+	"fmt"
+
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd.Execute()
+// reconCmd represents the recon command
+var reconCmd = &cobra.Command{
+	Use:   "recon [objects]",
+	Short: "Conduct reconnaissance of the local system",
+	Long:  `Conduct reconnaissance of the local system and identifying high value objects to exfiltrate via routes`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("recon called")
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(reconCmd)
+	reconCmd.Flags().StringArrayP("type", "t", []string{"all"}, "Types of objects to search for")
+	// reconCmd.Flags().BoolP("report", "r", false, "Print a report on the types of objects it found")
 }

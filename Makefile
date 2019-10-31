@@ -5,7 +5,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
-VERSION=$(shell grep -e 'VERSION = ".*"' version.go | cut -d= -f2 | sed  s/[[:space:]]*\"//g)
+VERSION=$(shell grep -e 'VERSION = ".*"' pkg/version.go | cut -d= -f2 | sed  s/[[:space:]]*\"//g)
 BUILD_DIR=build
 NAME=exfil
 

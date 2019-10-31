@@ -30,15 +30,29 @@ import (
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
+
+	exfil "github.com/rangertaha/exfil/pkg"
 )
 
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "exfil [options] [target]",
-	Short: "Exfiltrate data from a computer system",
-	Long:  `Data exfiltration framework designed to exfiltrate data from a computer system.`,
+	Version: exfil.VERSION,
+	Args:    cobra.MinimumNArgs(1),
+	Use:     "exfil [objects]",
+	Example: "exfil ~/home/james /etc/shadow",
+	Short:   "Exfiltrate objects from local system via routes",
+	Long:    `Data exfiltration framework designed to exfiltrate data from a computer system.`,
+	Annotations: map[string]string{"one": "11111", "two": "22222"},
+
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cmd.Help()
+			os.Exit(1) 
+		}
+		exfil.Tool()
+	},
 }
 
 // Execute ...
@@ -51,16 +65,13 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.exfil.yaml)")
-
-	// Plugins
 	rootCmd.PersistentFlags().StringArrayP("routes", "r", []string{"dns", "email", "icmp", "tcp", "udp", "gdive"},
-		"Routes are plugins that are responsible for sending and recieving data.")
+		"Routes are plugins that are responsible for sending and recieving data")
 
 	// Verbosity Options
-	rootCmd.PersistentFlags().BoolP("progress", "p", false, "Show progrss bar with estimated time of completion")
-	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Output additional details")
+	// rootCmd.PersistentFlags().BoolP("progress", "p", false, "Show progrss bar with estimated time of completion")
+	// rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Output additional details")
 }
 
 // initConfig reads in config file and ENV variables if set.

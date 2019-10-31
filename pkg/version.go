@@ -19,12 +19,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-package main
 
-import (
-	"github.com/rangertaha/exfil/cmd"
+package exfil
+
+const (
+	// VERSION format is loosely based on [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+	VERSION = "0.0.1"
+
+	// DEBUG not used yet
+	DEBUG = false
+
+	// LOGO made as ascii graphics
+	LOGO = `
+
+ Version: ` + VERSION + "\n"
 )
-
-func main() {
-	cmd.Execute()
-}
